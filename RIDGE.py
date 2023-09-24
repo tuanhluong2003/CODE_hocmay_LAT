@@ -26,21 +26,21 @@ Y_train = dttrain.iloc[:, 7]
 X_test = dttest.iloc[:, :-1]
 Y_test = dttest.iloc[:, 7]
 
-# LinearRegression
-print("\nLinearRegression")
-#Khai báo mô hình
-reg = LinearRegression()
+# Ridge
+print("\nRidge")
+#khai báo mô hình
+rid = Ridge()
 #Huấn luyện mô hình
-reg.fit(X_train, Y_train)
-y_preLR = reg.predict(X_test)
-y = np.array(Y_test)
-print("Chenh lech %.10f" % r2_score(Y_test,y_preLR))
-print('MAE:', metrics.mean_absolute_error(Y_test, y_preLR))
-print('NSE:', NSE(y, y_preLR))
-print('RMSE:', np.sqrt(metrics.mean_squared_error(Y_test, y_preLR)))
+rid.fit(X_train,Y_train)
+#Giá trị thực tế
+y_preRd = rid.predict(X_test)
+print("Chenh lech %.10f" % r2_score(Y_test,y_preRd))
+print('MAE:', metrics.mean_absolute_error(Y_test, y_preRd))
+print('NSE:', NSE(Y_test, y_preRd))
+print('RMSE:', metrics.mean_squared_error(Y_test, y_preRd,squared=False))
 
 y = np.array(Y_test)
 print("Thuc te - du doan - chech lech")
 for i in range(0,len(y)):
-    print(y[i],"-",y_preLR[i],"=",abs(y[i]-y_preLR[i]))
+    print(y[i],"-",y_preRd[i],"=",abs(y[i]-y_preRd[i]))
 

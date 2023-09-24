@@ -4,6 +4,14 @@ from sklearn.model_selection import KFold
 from sklearn.linear_model import LinearRegression
 from sklearn.model_selection import train_test_split
 import numpy as np
+from sklearn import metrics
+
+
+def NSE(y_true, y_pred):
+    numerator = np.sum((y_true - y_pred) ** 2)
+    denominator = np.sum((y_true - np.mean(y_true)) ** 2)
+    nse_value = 1 - (numerator / denominator)
+    return nse_value
 
 # Loading the dataset
 data = pd.read_csv('traintaxippff.csv')
@@ -36,8 +44,16 @@ for train_index, validation_index in kf.split(dt_Train):
         min = sum_error
         regr=lr
 
-y_test_pred=regr.predict(dt_Test.iloc[:,:7])
-y_test=np.array(dt_Test.iloc[:,7])
+
+X_test = dt_Test.iloc[:,:7]
+y_test = dt_Test.iloc[:,7]
+y_test_pred = regr.predict(X_test)
+print("Chenh lech %.10f" % r2_score(y_test,y_test_pred))
+print('MAE:', metrics.mean_absolute_error(y_test, y_test_pred))
+print('NSE:', NSE(y_test, y_test_pred))
+print('RMSE:', np.sqrt(metrics.mean_squared_error(y_test, y_test_pred)))
+
+y = np.array(y_test)
 print("Thuc te        Du doan              Chenh lech")
-for i in range(0,len(y_test)):
-    print(y_test[i],"  ",y_test_pred[i],  "  " , abs(y_test[i]-y_test_pred[i]))
+for i in range(0,len(y)):
+    print(y[i]," - ",y_test_pred[i],  " = " , abs(y[i]-y_test_pred[i]))
